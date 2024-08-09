@@ -1,95 +1,90 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+"use client";
+import { useRouter } from "next/navigation";
+import "./styles/index.css";
+import Link from "next/link";
+import React, { useEffect, useState } from 'react'
+import { ConsultarTodosProjects, EliminarProject, ConsultarProject, ActualizarProject } from "./../apiProject.js"
 
 export default function Home() {
+  const [project, setProject] = useState([])
+  const [busqueda, setbusqueda] = useState([])
+  const router = useRouter()
+
+  const consultarProject = () => {
+    if (busqueda != '') {
+      const dates = ConsultarProject(busqueda)
+      dates.then(date => {
+        setProject([date])
+        console.log(date);
+      })
+    } else {
+      const dates = ConsultarTodosProjects()
+      dates.then(date => {
+        setProject(date)
+        console.log(date);
+      })
+    }
+  }
+
+  useEffect(() => {
+    consultarProject()
+    consultarProject()
+  }, [20])
+
+  const deleteProject = (id) => {
+    EliminarProject(id)
+    consultarProject()
+    consultarProject()
+  }
+
+  const updateStateProject = (id) => {
+    ActualizarProject(id, { stateProject: "finally" })
+    consultarProject()
+    consultarProject()
+  }
+
   return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>src/app/page.js</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
+    <div className="row contenderVista">
+      <h1 className="col-s-12 col-l-12 ">MANAGE OF PROJECTS</h1>
+      <div className="col-s-12 col-l-4">
+        <div className="col-s-12 col-m-6 col-l-12 contentSearch">
+          <h2 className="col-xs-12 col-s-12 ">BUSQUEDA</h2>
+          <input className="col-xs-12 col-s-12" type="search"
+            name="Search" placeholder="Search Project" value={busqueda} onChange={(e) => setbusqueda(e.target.value)} />
+          <button className="col-xs-12 col-s-12" type="button" onClick={() => consultarProject()}>SEARCH</button>
+        </div>
+        <div className="col-l-3 col-l-12 col-m-6 contentCreate">
+          <h2 className="col-s-12">CREATE A PROJECT</h2>
+          <Link className="col-s-12 Link" href="/crearUpdate">CREATE</Link>
+        </div >
+      </div>
+      <div className="col-s-12 col-l-8 contentProjects">
+        <h3 className="col-s-12">PROJECTS</h3>
+        <div className="col-s-12">
+          {
+            project.map((projects) => (
+              <div className="col-s-12 Project">
+                <h4 className="col-s-12">Project: {projects.name}</h4>
+                <div className="col-s-12 Data">
+                  <p className="col-s-12">State project: {projects.stateProject}</p>
+                  <p className="col-s-12">Progressing: {projects.progressing}%</p>
+                  <p className="col-s-12">Date Initial: {projects.dateInitial}</p>
+                  <p className="col-s-12">Date Final: {projects.dateFinal}</p>
+                  <button className="col-xs-12 col-s-3 Link"
+                    type="button" onClick={() => router.push(`/task/${projects.id}`)}>WATCH TASK</button>
+                  {projects.stateProject != "finally" && <button className="col-xs-12 col-s-2 Link"
+                    type="button" onClick={() => router.push(`/crearUpdate/${projects.id}`)}>UPDATE</button>}
+                  <button className="col-xs-12 col-s-2 Link"
+                    type="button" onClick={() => { deleteProject(projects.id) }}>DELETE</button>
+                  {projects.stateProject != "finally" && <button className="col-xs-12 col-s-2 Link"
+                    type="button" onClick={() => updateStateProject(projects.id)}>Finally</button>}
+                </div>
+              </div>
+            ))
+          }
         </div>
       </div>
+    </div>
 
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore starter templates for Next.js.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
   );
 }

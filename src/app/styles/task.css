@@ -1,0 +1,49 @@
+.contentTask{
+    text-align: center;
+    text-transform: uppercase;
+}
+
+h5{
+    box-shadow: 0px 0px 10px rgba(0,0,0,0.5);
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.buttonCreate{
+    float: left;
+}
+
+.tabla{
+    height: 50px;
+    max-height: 100px;
+    margin-bottom: 10px;
+}
+.contentCreateTask{
+    background-color: rgba(0,0,0,0.5);
+    position: absolute;
+    height: 95%;
+    display: flex;
+    align-items: center;
+    justify-content: left;
+}
+
+.contentCreateTask>.contentInputsTasks{
+    background-color: white;
+    height: 80%;
+    border-radius: 10px;
+}
+
+.contentInputsTasks{
+    text-align: center;
+}
+
+.contentInputsTasks button{
+    float: left;
+}
+
+.contentInputsTasks>button[type="submit"]{
+    margin-top: 20px;
+}
+.labelTask{
+    margin-top: 20px;
+}
